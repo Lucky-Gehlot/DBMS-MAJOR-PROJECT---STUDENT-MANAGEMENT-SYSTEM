@@ -1,0 +1,46 @@
+<!-- we will login it login will happen after authentication , authentication will be done by checking the users table which we
+ will make using registration page data  -->
+
+ <!-- we are logining on the basis of email id so what we will do we will basically check if this email id is present in the user
+  table or not  -->
+
+  <!DOCTYPE html>
+  <html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+  </head>
+  <body>
+    <h2>Login Here</h2>
+    
+    <%let msg = ""; %>
+    <%if(err_pass == 1){ %>
+        <% msg = "Please enter same password in both field - password and confirm_password"; %>
+        <% err_pass = 0; %>
+    <%} %>
+    <%if(err_forget == 1){ %>
+        <% msg = "Wrong password entered !!"; %>
+        <% err_forget = 0; %>
+    <%} %>
+    <%if(err_email == 1){ %>
+        <% msg = "No data found with this email, Please register first !!"; %>
+        <% err_email = 0; %>
+    <%} %>
+
+    <h5><%= msg %></h5>
+
+    <form action="/login" method="post">
+        <input type="text" name="email" id="" placeholder="Enter email">
+        <input type="password" name="password" id="" placeholder="Enter Password">
+        <input type="password" name="confirm_password" id="" placeholder="Confirm Password">
+        <button type="submit">Login</button>
+    </form>
+    <a href="">New User? Register Here</a> <!--it will refer to registration route -->
+
+    <!-- <h5 class="content"></h5> -->
+
+
+    
+  </body>
+  </html>

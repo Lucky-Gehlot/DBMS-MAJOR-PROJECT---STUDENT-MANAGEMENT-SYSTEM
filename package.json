@@ -1,0 +1,19 @@
+{
+  "name": "dbms---major-project",
+  "version": "1.0.0",
+  "description": "This is the major project of dbms named student result management system developed by me started on 28-10-2025.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Lucky-Gehlot/DBMS-MAJOR-PROJECT---STUDENT-MANAGEMENT-SYSTEM.git"
+  },
+  "author": "Lucky Gehlot",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Lucky-Gehlot/DBMS-MAJOR-PROJECT---STUDENT-MANAGEMENT-SYSTEM/issues"
+  },
+  "homepage": "https://github.com/Lucky-Gehlot/DBMS-MAJOR-PROJECT---STUDENT-MANAGEMENT-SYSTEM#readme"
+}
