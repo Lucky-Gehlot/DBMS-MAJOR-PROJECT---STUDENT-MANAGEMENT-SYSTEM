@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register Yourself</title>
+</head>
+<body>
+
+    <!-- define the message of alert -->
+    <%let msg = ""; %>
+
+    <%if(err_reg_pass == 1){
+        msg = "Password and confirm password both fields are not matching";
+        err_reg_pass == 0; //reset for further registrations
+    }
+    if(err_reg_mobile_no == 1){
+        msg = "Please enter valid mobile no";
+        err_reg_mobile_no == 0; //reset for further registrations
+    }
+    if(err_reg_email == 1){
+        msg = "Already registered !, Please login";
+        err_reg_email == 0; //reset for further registrations 
+    }%>
+
+    <h4><%=msg%></h4>
+
+    <h1>Registration Form</h1>
+    <form action="/register" method="post">
+        <input type="text" placeholder="Enter Name" name="name">
+        <br>
+        <input type="email" placeholder="Enter Email" name="email">
+        <br>
+        <input type="number" placeholder="Enter Mobile no." name="mobile_no">
+        <br>
+        <input type="password" placeholder="Enter Password" name="password">
+        <br>
+        <input type="password" placeholder="Confirm Password" name="confirm_password">
+        <br>
+        <select name="security_que" id="">
+            <option value="" selected disabled>Select Security question</option>
+            <option value="what is your pet name">what is your pet name</option>
+            <option value="Who was your favorite teacher?">Who was your favorite teacher?</option>
+            <option value="What was your first job?">What was your first job?</option>
+            <option value="What is your favorite food?">What is your favorite food?</option>
+        </select>
+        <br>
+        <input type="text" placeholder="Answer of security question" name="ans_sec_que">
+        <br>
+        <button type="submit">Register</button>
+    </form>
+</body>
+</html>

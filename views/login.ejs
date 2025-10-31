@@ -13,7 +13,7 @@
   </head>
   <body>
     <h2>Login Here</h2>
-    
+
     <%let msg = ""; %>
     <%if(err_pass == 1){ %>
         <% msg = "Please enter same password in both field - password and confirm_password"; %>
@@ -36,7 +36,9 @@
         <input type="password" name="confirm_password" id="" placeholder="Confirm Password">
         <button type="submit">Login</button>
     </form>
-    <a href="">New User? Register Here</a> <!--it will refer to registration route -->
+    <br><br>
+    <a href="/register">New User? Register Here</a> <!--it will refer to registration route -->
+    &nbsp;&nbsp;&nbsp;&nbsp;<a href="/forget_Password">Forgot Password?</a>
 
     <!-- <h5 class="content"></h5> -->
 
