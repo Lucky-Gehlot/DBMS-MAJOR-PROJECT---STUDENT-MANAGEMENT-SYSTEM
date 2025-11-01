@@ -111,7 +111,7 @@ app.post("/login", (req, res) => {
             } else {
                 // Case 3: Email found and password matches (Success!)
                 // In a real app, you would set a session here
-                return res.redirect("/home");
+                return res.render("home.ejs");
             }
         }
     });
@@ -226,7 +226,7 @@ app.post("/forget_Password",(req,res) => {
             
             //now you got all the things so check if they are matching or not -
             if(security_que_1 == security_que && ans_sec_que_1 == ans_security_que){
-                //then we can say user can change his password 
+                //then we can say user can change his password
                 let update_query = `update users set user_password = "${new_password}" where email = "${email}"`;
                 try{
                     db.query(update_query,(err_update,res_update) => {
@@ -249,7 +249,137 @@ app.post("/forget_Password",(req,res) => {
     // res.send("Password reset succesfully")
 })
 
-app.get("/home",(req,res) => {
-    res.send("login succesfully!")
-})
+// app.get("/home",(req,res) => {
+//     res.redirect("home.ejs");
+// })
 //
+
+let err_course = 0;
+let succ_course = 0;
+let courses;
+
+app.get("/courses",(req,res) => {
+    let q_cnt_course = "select * from courses";
+    
+    db.query(q_cnt_course,(error,result) => {
+        courses = result;
+        return res.render("courses.ejs",{err_course,succ_course,courses});
+    })
+})
+
+app.post("/courses",(req,res) => {
+
+    //taking data
+    const {course_name,course_duration,course_charges,course_description} = req.body;
+    
+    //now authenticate details
+    //1.course_name should be unique
+
+    let q = `select * from courses where course_name = "${course_name}"`;
+    try{
+        db.query(q,(error,results) => {
+            if(error) throw error;
+            if(results.length != 0){
+                err_course = 1;
+                return res.render("courses.ejs",{err_course,succ_course,courses})
+            }
+        })
+    }catch(error){
+        console.log(error);
+    }
+
+    //course is not there so please add this course in the database 
+
+    // for it first you need count of all courses
+    let id_cnt = 0;
+
+    let q_cnt_course = "select * from courses";
+    try{
+        db.query(q_cnt_course,(error,results) => {
+            if(error) throw error;
+            // id_cnt = results.length;
+            id_cnt = results.length;
+            let q_ins_course = `insert into courses values (${id_cnt+1},"${course_name}","${course_duration}",${course_charges},"${course_description}");`
+            try{
+                db.query(q_ins_course,(err_1,res_1) => {
+                    if(err_1) throw err_1;
+                    succ_course = 1;
+
+                    //after inserting new data find updated courses
+                    let q_cnt_course = "select * from courses";
+                    db.query(q_cnt_course,(error,result) => {
+                        if(error) console.log(error);
+                        courses = result;
+                        return res.render("courses.ejs",{err_course,succ_course,courses});
+                    })
+                    
+                })
+            }catch(err_1){
+                console.log(err_1);
+            }
+        })
+    }catch(error){
+        console.log(error);
+    }
+})
+
+
+
+app.get('/edit-course', (req, res) => {
+    const courseId = req.query.id;
+    // Fetch course data and render edit form
+    res.render("course_edit.ejs",{courseId});
+});
+
+
+app.post('/edit-course',(req,res) => {
+    const courseId = req.query.id;
+    const {course_name,course_duration,course_charges,course_description} = req.body;
+    console.log(req.body);
+    console.log(courseId)
+    let q = `update courses set course_name = "${course_name}" ,duration = "${course_duration}" ,charges = ${course_charges} ,description = "${course_description}" where course_id = ${courseId}` ;
+    try{
+        db.query(q,(error,results) => {
+            if(error) throw error;
+            console.log(results);
+            // alert("course updated succesfully");
+            return res.redirect("/courses");
+        })
+    }catch(error){
+        console.log(error);
+    }
+})
+
+
+app.get("/delete-course",(req,res) => {
+    const courseId = req.query.id;
+    let del_q = `delete from courses where course_id = ${courseId}`;
+    try{
+        db.query(del_q,(error,results) => {
+            if(error) throw error;
+            console.log(results);
+            // alert("course updated succesfully");
+
+            return res.redirect("/courses");
+        })
+    }catch(error){
+        console.log(error);
+    }
+})
+
+
+app.get("/students",(req,res) => {
+
+    //first collect all the course data and send all the course data to another page
+    let q_cnt_course = "select * from courses";
+    try{
+        db.query(q_cnt_course,(error,courses) => {
+            if(error) throw error;
+            return res.render("students.ejs",{courses});
+        })
+    }catch(error){
+        console.log(error);
+    }
+})
+
+

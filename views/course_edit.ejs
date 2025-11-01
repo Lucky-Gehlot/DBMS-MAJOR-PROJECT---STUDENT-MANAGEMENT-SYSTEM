@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Course</title>
+</head>
+<body>
+    <form action="/edit-course?id=<%=courseId%>" method="post">
+        <input type="text" name="course_name" id="" placeholder="Course name">
+        <br>
+        <input type="text" name="course_duration" id="" placeholder="Course duration">
+        <br>
+        <input type="number" name="course_charges" placeholder="Course charges">
+        <br>
+        <input type="text" name="course_description" placeholder="Course description">
+        <br>
+        <button type="submit">Update Course</button>
+    </form>
+</body>
+</html>
