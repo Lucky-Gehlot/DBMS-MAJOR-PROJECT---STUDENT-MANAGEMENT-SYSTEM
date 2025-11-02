@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Detail</title>
+</head>
+<body>
+    <!-- print out the details of results you will have -->
+    <table border="2px solid black">
+        <tbody>
+            <%const {roll_no,name,email,gender,state,city,pincode,course,contact_no,admission_date,address} = results[0];%>
+            <%let vals = [roll_no,name,email,gender,state,city,pincode,course,contact_no,admission_date,address];%>
+            <%let arr = ["roll_no","name","email","gender","state","city","pincode","course","contact_no","admission_date","address"];%>
+            <%for(let i = 0; i < 11; i++){%>
+                <tr>
+                    <td ><%=arr[i]%></td>
+                    <td ><%=vals[i]%></td>
+                </tr>
+            <%}%>
+        </tbody>
+    </table>
+</body>
+</html>

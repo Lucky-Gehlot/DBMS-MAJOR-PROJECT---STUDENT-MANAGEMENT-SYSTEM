@@ -304,15 +304,14 @@ app.post("/courses",(req,res) => {
                 db.query(q_ins_course,(err_1,res_1) => {
                     if(err_1) throw err_1;
                     succ_course = 1;
-
+            
                     //after inserting new data find updated courses
                     let q_cnt_course = "select * from courses";
                     db.query(q_cnt_course,(error,result) => {
                         if(error) console.log(error);
                         courses = result;
                         return res.render("courses.ejs",{err_course,succ_course,courses});
-                    })
-                    
+                    })        
                 })
             }catch(err_1){
                 console.log(err_1);
@@ -367,15 +366,78 @@ app.get("/delete-course",(req,res) => {
     }
 })
 
+let err_search_stu_roll_no = 0; //field for searching student name and we caught any error
 
 app.get("/students",(req,res) => {
+    let q_show_students = "select * from students";
+    try{
+        db.query(q_show_students,(error,students) => {
+            if(error) throw error;
+            return res.render("students.ejs",{students,err_search_stu_roll_no});
+        })
+    }catch(error){
+        console.log(error);
+    }
+})
+
+
+let err_student_roll_no = 0;
+app.get("/add_student",(req,res) => {
 
     //first collect all the course data and send all the course data to another page
     let q_cnt_course = "select * from courses";
     try{
         db.query(q_cnt_course,(error,courses) => {
             if(error) throw error;
-            return res.render("students.ejs",{courses});
+            return res.render("add_students.ejs",{courses,err_student_roll_no});
+        })
+    }catch(error){
+        console.log(error);
+    }
+})
+
+
+app.post("/add_student",(req,res) => {
+    console.log(req.body);
+    const {roll_no,name,email,gender,state,city,pincode,course,contact_no,addmission_date,address} = req.body;
+    //first check roll no should be unique
+    let chk_roll_no = `select * from students where roll_no = ${roll_no}`;
+    try{
+        db.query(chk_roll_no,(error,results) => {
+            if(error) throw error;
+            if(results.length != 0){
+                err_student_roll_no = 1;
+                return res.render("add_students.ejs",{courses,err_student_roll_no});
+            }
+        })
+    }catch(error){
+        console.log(error);
+    }
+    //roll no isunique add into database
+    let add_roll_no = `insert into students values (${roll_no},"${name}","${email}","${gender}","${state}","${city}",${pincode},"${course}",${contact_no},"${addmission_date}","${address}")`;
+    try{
+        db.query(add_roll_no,(error,results) => {
+            if(error) throw error;
+            return res.redirect("/students");
+        })
+    }catch(error){
+        console.log(error);
+    }
+})
+
+
+app.post("/student",(req,res) => {
+    const {roll_no} = req.body;
+    let chk_roll_no = `select * from students where roll_no = ${roll_no}`;
+    try{
+        db.query(chk_roll_no,(error,results) => {
+            if(error) throw error;
+
+            if(results.length == 0){
+                err_search_stu_roll_no = 1;
+                return res.render("students.ejs",{err_search_stu_roll_no});
+            }
+            else return res.render("student.ejs",{results})            
         })
     }catch(error){
         console.log(error);
