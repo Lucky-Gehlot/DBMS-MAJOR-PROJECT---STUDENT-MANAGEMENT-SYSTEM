@@ -3,19 +3,102 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="course_edit.css">
     <title>Edit Course</title>
+ 
 </head>
 <body>
-    <form action="/edit-course?id=<%=courseId%>" method="post">
-        <input type="text" name="course_name" id="" placeholder="Course name">
-        <br>
-        <input type="text" name="course_duration" id="" placeholder="Course duration">
-        <br>
-        <input type="number" name="course_charges" placeholder="Course charges">
-        <br>
-        <input type="text" name="course_description" placeholder="Course description">
-        <br>
-        <button type="submit">Update Course</button>
-    </form>
+    <div class="container">
+        <div class="header">
+            <div class="icon-circle">
+                <svg viewBox="0 0 24 24">
+                    <path d="M12 14l9-5-9-5-9 5 9 5z"/>
+                    <path d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z"/>
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 14l9-5-9-5-9 5 9 5zm0 0l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14zm-4 6v-7.5l4-2.222"/>
+                </svg>
+            </div>
+            <h1>Edit Course</h1>
+            <p class="subtitle">Update your course information and details</p>
+        </div>
+
+        <form action="/edit-course?id=<%=courseId%>" method="post" id="courseForm">
+            <div class="form-group">
+                <label for="course_name">Course Name</label>
+                <div class="input-wrapper">
+                    <input type="text" name="course_name" id="course_name" placeholder="e.g., Advanced Web Development Bootcamp" required>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="course_duration">Course Duration</label>
+                <div class="input-wrapper">
+                    <input type="text" name="course_duration" id="course_duration" placeholder="e.g., 12 weeks" required>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="course_charges">Course Fee ($)</label>
+                <div class="input-wrapper">
+                    <input type="number" name="course_charges" id="course_charges" placeholder="999" required>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="course_description">Course Description</label>
+                <div class="input-wrapper">
+                    <textarea name="course_description" id="course_description" placeholder="Provide a detailed description of what students will learn in this course..." required maxlength="500"></textarea>
+                    <span class="char-count" id="charCount">0/500</span>
+                </div>
+            </div>
+
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+
+            <div class="button-group">
+                <button type="button" class="btn-secondary" onclick="history.back()">Cancel</button>
+                <button type="submit" class="btn-primary">Update Course</button>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        const form = document.getElementById('courseForm');
+        const inputs = form.querySelectorAll('input[required], textarea[required]');
+        const progressFill = document.getElementById('progressFill');
+        const textarea = document.getElementById('course_description');
+        const charCount = document.getElementById('charCount');
+
+        // Character counter
+        textarea.addEventListener('input', function() {
+            const length = this.value.length;
+            charCount.textContent = `${length}/500`;
+        });
+
+        // Progress bar
+        function updateProgress() {
+            let filledCount = 0;
+            inputs.forEach(input => {
+                if (input.value.trim() !== '') {
+                    filledCount++;
+                }
+            });
+            const progress = (filledCount / inputs.length) * 100;
+            progressFill.style.width = progress + '%';
+        }
+
+        inputs.forEach(input => {
+            input.addEventListener('input', updateProgress);
+        });
+
+        // Form submission animation
+        form.addEventListener('submit', function(e) {
+            const submitBtn = form.querySelector('.btn-primary');
+            submitBtn.textContent = 'Updating...';
+            submitBtn.style.pointerEvents = 'none';
+        });
+
+        updateProgress();
+    </script>
 </body>
 </html>

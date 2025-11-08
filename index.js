@@ -2,6 +2,8 @@ const { name } = require("ejs");
 const express = require("express")
 const mysql = require("mysql2")
 const path = require("path")
+const PDFDocument = require('pdfkit');
+const fs = require('fs');
 // const ejs = require("ejs")
 
 
@@ -327,7 +329,21 @@ app.post("/courses",(req,res) => {
 app.get('/edit-course', (req, res) => {
     const courseId = req.query.id;
     // Fetch course data and render edit form
-    res.render("course_edit.ejs",{courseId});
+    let q = `select * from courses where course_id = ${courseId}`;
+    try{
+        db.query(q,(error,results) => {
+            if(error) throw error;
+            if(results.length == 0){
+                // err_course = 1;
+                
+                return res.render("courses.ejs",{err_course,succ_course,courses})
+            }
+            return res.render("course_edit.ejs",{courseId,results});
+        })
+    }catch(error){
+        console.log(error);
+    }
+    
 });
 
 
@@ -444,4 +460,362 @@ app.post("/student",(req,res) => {
     }
 })
 
+app.get('/edit-student', (req, res) => {
+    const rollNO = req.query.id;
+    // Fetch course data and render edit form
+    let chk_roll_no = `select * from students where roll_no = ${rollNO}`;
+    try{
+        db.query(chk_roll_no,(error,results) => {
+            if(error) throw error;
+            let crs = [];
+            if(results.length == 0) return res.render("students.ejs",{crs,err_search_stu_roll_no});
+            let q_cnt_course = "select * from courses";
+            try{
+                db.query(q_cnt_course,(err,crs) => {
+                    if(err) throw err;
+                    
+                    return res.render("student_edit.ejs",{crs,results});
+                })
+            }catch(err){
+                console.log(err);
+            }           
+        })
+    }catch(error){
+        console.log(error);
+    }
+});
 
+app.post("/edit-student",(req,res) =>{
+    const rollNO = req.query.id;
+    //before update we should ensure one thing that course should be selected from our course list
+    console.log(req.body)
+    const {name,email,gender,state,city,pincode,course,contact_no,addmission_date,address} = req.body;
+
+    let update_q = `update students set name = "${name}",email = "${email}",gender = "${gender}",state = "${state}",city = "${city}",pincode = ${pincode},course = "${course}",contact_no = ${contact_no},admission_date = "${addmission_date}",address = "${address}" where roll_no = ${rollNO}`;
+    try{
+        db.query(update_q,(err,result) => {
+            if(err) throw err;
+            let q_show_students = "select * from students";
+            try{
+                db.query(q_show_students,(error,students) => {
+                    if(error) throw error;
+                    return res.render("students.ejs",{students,err_search_stu_roll_no});
+                })
+            }catch(error){
+                console.log(error);
+            }
+        })
+    }catch(err){
+        console.log(err);
+    }
+})
+
+app.get("/delete-student",(req,res) => {
+    const rollNo = req.query.id;
+    let del_q = `delete from students where roll_no = ${rollNo}`;
+    try{
+        db.query(del_q,(error,results) => {
+            if(error) throw error;
+            console.log(results);
+            // alert("course updated succesfully");
+
+            return res.redirect("/students");
+        })
+    }catch(error){
+        console.log(error);
+    }
+})
+
+
+let err_result_roll_no = 0;
+let roll_no = 0;
+
+app.get("/results",(req,res) => {
+    //take roll no from user- 
+    res.render("results.ejs",{roll_no});
+})
+
+app.get("/get-student/:roll_no",(req,res) => {
+    const {roll_no} = req.params;
+    console.log(roll_no);
+    db.query('SELECT * FROM students WHERE roll_no = ?', [roll_no], (err, results) => {
+        if (err) return res.status(500).send(err);
+        if (results.length === 0) return res.status(404).send({ message: 'Student not found' });
+        res.send(results[0]);
+    });
+})
+
+
+app.post('/save-result', (req, res) => {
+    const { roll_no, marks_obtained, total_marks } = req.body;
+    db.query('INSERT INTO results (roll_no, marks_obtained, total_marks) VALUES (?, ?, ?)',
+        [roll_no, marks_obtained, total_marks],
+        (err) => {
+            if (err) return res.status(500).send(err);
+            return res.redirect('view-results'); //iski jagah view-results ka page display karao
+        });
+});
+
+// app.get("/add_result",(req,res) => {
+//     const {roll_no} = req.query.id;
+//     console.log(roll_no);
+//     //add the result and keep roll_no aa
+// })
+
+
+app.get('/view-results',(req,res) => {
+    const query = `
+        SELECT s.roll_no, s.name, s.course, r.marks_obtained, r.total_marks
+        FROM results r
+        JOIN students s ON r.roll_no = s.roll_no
+        ORDER BY s.roll_no ASC
+    `;
+    db.query(query, (err, results) => {
+        if (err) return res.status(500).send(err);
+        res.render('allResults', { results });
+    });
+})
+
+
+app.get('/result/:id',(req,res) => {
+    const roll_no = req.params.id;
+    const query = `
+        SELECT s.roll_no, s.name, s.email, s.course, r.marks_obtained, r.total_marks
+        FROM results r
+        JOIN students s ON r.roll_no = s.roll_no
+        WHERE r.roll_no = ?
+    `;
+    db.query(query, [roll_no], (err, result) => {
+        if (err) return res.status(500).send(err);
+        if (result.length === 0) return res.status(404).send('Result not found');
+        res.render('resultDetail', { result: result[0] });
+    });
+})
+
+
+app.get('/download/:id', (req, res) => {
+    const roll_no = req.params.id;
+    const query = `
+        SELECT s.roll_no, s.name, s.email, s.course, r.marks_obtained, r.total_marks
+        FROM results r
+        JOIN students s ON r.roll_no = s.roll_no
+        WHERE r.roll_no = ?
+    `;
+    db.query(query, [roll_no], (err, result) => {
+        if (err) return res.status(500).send(err);
+        if (result.length === 0) return res.status(404).send('Result not found');
+
+        const data = result[0];
+        const doc = new PDFDocument({ margin: 50 });
+        
+        res.setHeader('Content-Disposition', `attachment; filename=Result_${data.roll_no}.pdf`);
+        res.setHeader('Content-Type', 'application/pdf');
+        doc.pipe(res);
+
+        // Colors
+        const primaryColor = '#1e3a8a';    // Navy blue
+        const secondaryColor = '#3b82f6';  // Blue
+        const accentColor = '#06b6d4';     // Cyan
+        const successColor = '#10b981';    // Green
+        const textColor = '#1f2937';       // Dark gray
+
+        // Header with gradient effect (simulated with rectangles)
+        doc.rect(0, 0, doc.page.width, 150).fill('#1e3a8a');
+        doc.rect(0, 0, doc.page.width, 150).fillOpacity(0.8).fill('#3b82f6');
+
+        // // Institution Logo/Icon (circle)
+        // doc.circle(doc.page.width / 2, 60, 35)
+        //    .lineWidth(3)
+        //    .stroke('#ffffff');
+        
+        // doc.fontSize(16)
+        //    .fillColor('#ffffff')
+        //    .text('🎓', doc.page.width / 2 - 10, 50);
+
+        // Title
+        doc.fontSize(28)
+           .font('Helvetica-Bold')
+           .fillColor('#ffffff')
+           .text('STUDENT RESULT REPORT', 50, 110, {
+               align: 'center',
+               width: doc.page.width - 100
+           });
+
+        // Reset position
+        doc.y = 180;
+
+        // Date and Report ID
+        const currentDate = new Date().toLocaleDateString('en-IN', {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric'
+        });
+        
+        doc.fontSize(10)
+           .fillColor(textColor)
+           .font('Helvetica')
+           .text(`Report Generated: ${currentDate}`, 50, doc.y, { align: 'right' })
+           .text(`Report ID: RES-${data.roll_no}-${Date.now()}`, 50, doc.y, { align: 'right' });
+
+        doc.moveDown(2);
+
+        // Student Information Section
+        doc.fontSize(16)
+           .font('Helvetica-Bold')
+           .fillColor(primaryColor)
+           .text('Student Information', 50, doc.y);
+        
+        // Blue underline
+        doc.moveTo(50, doc.y + 5)
+           .lineTo(200, doc.y + 5)
+           .lineWidth(3)
+           .stroke(secondaryColor);
+
+        doc.moveDown(1.5);
+
+        // Student Info Table
+        const tableTop = doc.y;
+        const col1X = 50;
+        const col2X = 200;
+        const rowHeight = 35;
+
+        // Table background
+        doc.rect(col1X, tableTop, 500, rowHeight * 4)
+           .fillOpacity(0.05)
+           .fill(primaryColor);
+
+        const studentInfo = [
+            { label: 'Roll Number', value: data.roll_no },
+            { label: 'Student Name', value: data.name },
+            { label: 'Email Address', value: data.email },
+            { label: 'Course', value: data.course }
+        ];
+
+        studentInfo.forEach((info, index) => {
+            const yPos = tableTop + (index * rowHeight) + 10;
+            
+            // Row separator
+            if (index > 0) {
+                doc.moveTo(col1X, yPos - 5)
+                   .lineTo(col1X + 500, yPos - 5)
+                   .lineWidth(1)
+                   .strokeOpacity(0.1)
+                   .stroke(textColor);
+            }
+
+            // Label
+            doc.fontSize(11)
+               .font('Helvetica-Bold')
+               .fillOpacity(1)
+               .fillColor(primaryColor)
+               .text(info.label, col1X + 15, yPos);
+
+            // Value
+            doc.fontSize(11)
+               .font('Helvetica')
+               .fillColor(textColor)
+               .text(info.value, col2X + 15, yPos);
+        });
+
+        doc.moveDown(4);
+
+        // Academic Performance Section
+        doc.fontSize(16)
+           .font('Helvetica-Bold')
+           .fillColor(primaryColor)
+           .text('Academic Performance', 50, doc.y);
+        
+        doc.moveTo(50, doc.y + 5)
+           .lineTo(240, doc.y + 5)
+           .lineWidth(3)
+           .stroke(secondaryColor);
+
+        doc.moveDown(1.5);
+
+        // Performance Table
+        const perfTableTop = doc.y;
+        const perfRowHeight = 45;
+        
+        // Table Header
+        doc.rect(50, perfTableTop, 500, perfRowHeight)
+           .fill(secondaryColor);
+
+        doc.fontSize(12)
+           .font('Helvetica-Bold')
+           .fillColor('#ffffff')
+           .text('Marks Obtained', 70, perfTableTop + 15, { width: 150 })
+           .text('Total Marks', 240, perfTableTop + 15, { width: 150 })
+           .text('Percentage', 410, perfTableTop + 15, { width: 120 });
+
+        // Table Data Row
+        const dataRowY = perfTableTop + perfRowHeight;
+        doc.rect(50, dataRowY, 500, perfRowHeight)
+           .fillOpacity(0.03)
+           .fill(primaryColor);
+
+        doc.fontSize(14)
+           .font('Helvetica-Bold')
+           .fillOpacity(1)
+           .fillColor(textColor)
+           .text(data.marks_obtained.toString(), 70, dataRowY + 15, { width: 150 })
+           .text(data.total_marks.toString(), 240, dataRowY + 15, { width: 150 });
+
+        // Calculate percentage
+        const percentage = ((data.marks_obtained / data.total_marks) * 100).toFixed(2);
+        const grade = percentage >= 90 ? 'A+' : percentage >= 80 ? 'A' : percentage >= 70 ? 'B' : percentage >= 60 ? 'C' : 'D';
+
+        doc.fontSize(14)
+           .font('Helvetica-Bold')
+           .fillColor(successColor)
+           .text(`${percentage}%`, 410, dataRowY + 15, { width: 120 });
+
+        doc.moveDown(3);
+
+        // Grade Section
+        // doc.fontSize(14)
+        //    .font('Helvetica-Bold')
+        //    .fillColor(primaryColor)
+        //    .text('Grade: ', 50, doc.y, { continued: true })
+        //    .fontSize(18)
+        //    .fillColor(successColor)
+        //    .text(grade);
+
+        // // Status Badge
+        // const status = percentage >= 60 ? 'PASSED' : 'FAILED';
+        // const statusColor = percentage >= 60 ? successColor : '#ef4444';
+
+        // doc.moveDown(1);
+        // doc.roundedRect(50, doc.y, 120, 10, 20)
+        //    .fill(statusColor);
+
+        // doc.fontSize(14)
+        //    .font('Helvetica-Bold')
+        //    .fillColor('#ffffff')
+        //    .text(status, 50, doc.y - 35 + 10, { width: 120, align: 'center' });
+
+        // Footer
+        // const footerY = doc.page.height - 100;
+        
+        // doc.moveTo(50, footerY)
+        //    .lineTo(doc.page.width - 50, footerY)
+        //    .lineWidth(2)
+        //    .stroke(secondaryColor);
+
+        doc.fontSize(10)
+           .font('Helvetica')
+           .fillColor(textColor)
+           .text('This is a computer-generated document. No signature is required.', 50, footerY + 15, {
+               align: 'center',
+               width: doc.page.width - 100
+           });
+
+        doc.fontSize(9)
+           .fillColor('#6b7280')
+           .text('© 2025 Student Management System. All rights reserved.', 50, footerY + 35, {
+               align: 'center',
+               width: doc.page.width - 100
+           });
+
+        doc.end();
+    });
+});

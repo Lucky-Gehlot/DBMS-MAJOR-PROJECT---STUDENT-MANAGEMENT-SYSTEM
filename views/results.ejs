@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Student Result</title>
+    <link rel="stylesheet" href="results.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Add Student Result</h1>
+            <p>Enter roll number to fetch student details and add marks</p>
+        </div>
+
+        <div class="error-message" id="errorMessage"></div>
+
+        <form id="resultForm" action="/save-result" method="POST">
+            <div class="search-section">
+                <div class="search-group">
+                    <div class="form-group">
+                        <label for="roll_no">Roll Number</label>
+                        <input type="text" id="roll_no" name="roll_no" placeholder="Enter roll number" required>
+                    </div>
+                    <button type="button" class="btn-search" onclick="fetchStudent()">
+                        <span id="searchText">Search</span>
+                    </button>
+                </div>
+            </div>
+
+            <div class="student-info" id="studentInfo">
+                <span class="info-badge">Student Details</span>
+
+                <div class="form-group">
+                    <label for="name">Student Name</label>
+                    <input type="text" id="name" readonly>
+                </div>
+
+                <div class="form-group">
+                    <label for="email">Email Address</label>
+                    <input type="text" id="email" readonly>
+                </div>
+
+                <div class="form-group">
+                    <label for="course_name">Course</label>
+                    <input type="text" id="course_name" readonly>
+                </div>
+
+                <div class="divider"></div>
+
+                <div class="marks-row">
+                    <div class="form-group">
+                        <label for="marks_obtained">Marks Obtained</label>
+                        <input type="number" id="marks_obtained" name="marks_obtained" placeholder="0" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="total_marks">Total Marks</label>
+                        <input type="number" id="total_marks" name="total_marks" placeholder="100" required>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn-submit">Save Result</button>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        async function fetchStudent() {
+            const rollNo = document.getElementById('roll_no').value;
+            const searchBtn = document.querySelector('.btn-search');
+            const searchText = document.getElementById('searchText');
+            const errorMessage = document.getElementById('errorMessage');
+            const studentInfo = document.getElementById('studentInfo');
+
+            errorMessage.classList.remove('show');
+            
+            if (!rollNo) {
+                showError("Please enter a roll number!");
+                return;
+            }
+
+            searchText.innerHTML = 'Searching<span class="loading"></span>';
+            searchBtn.disabled = true;
+
+            try {
+                const res = await fetch(`/get-student/${rollNo}`);
+                if (!res.ok) {
+                    showError("Student not found! Please check the roll number.");
+                    studentInfo.classList.remove('show');
+                    return;
+                }
+                const student = await res.json();
+                document.getElementById('name').value = student.name;
+                document.getElementById('email').value = student.email;
+                document.getElementById('course_name').value = student.course;
+                
+                studentInfo.classList.add('show');
+            } catch (err) {
+                console.error(err);
+                showError("Error fetching student data. Please try again.");
+                studentInfo.classList.remove('show');
+            } finally {
+                searchText.textContent = 'Search';
+                searchBtn.disabled = false;
+            }
+        }
+
+        function showError(message) {
+            const errorMessage = document.getElementById('errorMessage');
+            errorMessage.textContent = message;
+            errorMessage.classList.add('show');
+            setTimeout(() => {
+                errorMessage.classList.remove('show');
+            }, 4000);
+        }
+
+        document.getElementById('roll_no').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                fetchStudent();
+            }
+        });
+    </script>
+</body>
+</html>

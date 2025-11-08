@@ -3,131 +3,149 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Course details</title>
+    <title>Course & Result Management</title>
+    <link rel="stylesheet" href="courses.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+    
 </head>
 <body>
 
-    <%let msg = ""; %>
+    <div class="header-banner">
+        <h1>Welcome to Your Course & Result Hub</h1>
+        <p>Manage all your educational courses and track student progress with ease.</p>
+    </div>
 
-    <%if(err_course == 1){
-        msg = "This course is already added please add another course";
-        err_course = 0; //reset for further registrations
-    }%>
+    <div class="container">
+        <%let msg = ""; %>
+        <%let isError = false; %>
 
-    <%if(succ_course == 1){
-        msg = "Course added succesfully";
-        succ_course = 0; //reset for further registrations
-    }%>
+        <%if(err_course == 1){
+            msg = "This course is already added. Please add another course.";
+            isError = true;
+            err_course = 0;
+        }%>
 
-    <h5><%=msg%></h5>
-    <form action="/courses" method="post">
-        <input type="text" name="course_name" id="" placeholder="Course name">
-        <br>
-        <input type="text" name="course_duration" id="" placeholder="Course duration">
-        <br>
-        <input type="number" name="course_charges" placeholder="Course charges">
-        <br>
-        <input type="text" name="course_description" placeholder="Course description">
-        <br>
-        <button type="submit">Add Course</button>
-    </form>
+        <%if(succ_course == 1){
+            msg = "Course added successfully!";
+            succ_course = 0;
+        }%>
 
-    <table border="2px solid black" id="myTable">
-        <thead>
-            <th>course_id</th>
-            <th>course_name</th>
-            <th>duration</th>
-            <th>charges</th>
-            <th>description</th>
-            <th>Edit</th>
-            <th>delete</th>
-        </thead>
-        <tbody id="tableBody">
-            <%for(let i = 0; i < courses.length; i++){%>
-                <%const {course_id,course_name,duration,charges,description} = courses[i];%>
-                <tr class="data-row" data-course-id="<%=course_id%>">
-                    <td><%=course_id%></td>
-                    <td><%=course_name%></td>
-                    <td><%=duration%></td>
-                    <td><%=charges%></td>
-                    <td><%=description%></td>
-                    <td><button class="edit-btn" data-course-id="<%=course_id%>">Edit</button></td>  
-                    <td><button class="delete-btn" data-course-id="<%=course_id%>">Delete</button></td> 
-                </tr>
-            <%}%>
-        </tbody>
-    </table>
+        <%if(msg){%>
+            <div class="message-box <%= isError ? 'message-error' : 'message-success' %>">
+                <i class="fas <%= isError ? 'fa-exclamation-circle' : 'fa-check-circle' %>"></i>
+                <%=msg%>
+            </div>
+        <%}%>
+
+        <div class="card">
+            <h2><i class="fas fa-plus-circle"></i> Add New Course</h2>
+            <form action="/courses" method="post">
+                <input type="text" name="course_name" placeholder="Course Name (e.g., Advanced JavaScript)" required>
+                <input type="text" name="course_duration" placeholder="Duration (e.g., 6 weeks, 45 hours)" required>
+                <input type="number" name="course_charges" placeholder="Charges (e.g., 499.00)" step="0.01" required>
+                <input type="text" name="course_description" placeholder="Short Description (Max 100 chars)" maxlength="100" required>
+                <button type="submit"><i class="fas fa-save"></i> Add Course</button>
+            </form>
+        </div>
+
+        <div class="card">
+            <h2><i class="fas fa-book-open"></i> Available Courses</h2>
+            <% if (courses && courses.length > 0) { %>
+                <div style="overflow-x: auto;">
+                    <table id="myTable">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Name</th>
+                                <th>Duration</th>
+                                <th>Charges</th>
+                                <th>Description</th>
+                                <th style="text-align: center;">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tableBody">
+                            <%for(let i = 0; i < courses.length; i++){%>
+                                <%const {course_id,course_name,duration,charges,description} = courses[i];%>
+                                <tr class="data-row" data-course-id="<%=course_id%>">
+                                    <td><%=course_id%></td>
+                                    <td><%=course_name%></td>
+                                    <td><%=duration%></td>
+                                    <td>$<%=parseFloat(charges).toFixed(2)%></td>
+                                    <td><%=description%></td>
+                                    <td style="text-align: center; white-space: nowrap;">
+                                        <button class="action-btn edit-btn" data-course-id="<%=course_id%>"><i class="fas fa-edit"></i> Edit</button>  
+                                        <button class="action-btn delete-btn" data-course-id="<%=course_id%>"><i class="fas fa-trash-alt"></i> Delete</button> 
+                                    </td> 
+                                </tr>
+                            <%}%>
+                        </tbody>
+                    </table>
+                </div>
+            <% } else { %>
+                <div class="empty-state">
+                    <img src="https://source.unsplash.com/200x200/?empty-desk,no-data" alt="No courses available">
+                    <p>No courses added yet. Start by adding a new course above!</p>
+                    <p>Looks like a fresh start! <i class="far fa-smile-beam"></i></p>
+                </div>
+            <% } %>
+        </div>
+    </div>
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-        const tableBody = document.getElementById('tableBody');
-        
-        // Add hover styling
-        const style = document.createElement('style');
-        style.textContent = `
-            .data-row { cursor: pointer; transition: background-color 0.2s; }
-            .data-row:hover { background-color: #f5f5f5; }
-            .edit-btn, .delete-btn { 
-                padding: 5px 10px; 
-                cursor: pointer; 
-                border: none; 
-                border-radius: 3px; 
-            }
-            .edit-btn { background-color: #4CAF50; color: white; }
-            .edit-btn:hover { background-color: #45a049; }
-            .delete-btn { background-color: #f44336; color: white; }
-            .delete-btn:hover { background-color: #da190b; }
-        `;
-        document.head.appendChild(style);
-        
-        // Event delegation for Edit buttons
-        tableBody.addEventListener('click', function(event) {
-            const target = event.target;
-            
-            // Handle Edit button click
-            if (target.classList.contains('edit-btn')) {
-                event.stopPropagation(); // Prevent row click
-                const courseId = target.getAttribute('data-course-id');
-                
-                // Redirect to edit page with course ID
-                window.location.href = `/edit-course?id=${courseId}`;
-                // Or use: window.location.href = `/edit-course/${courseId}`;
-            }
-            
-            // Handle Delete button click
-            if (target.classList.contains('delete-btn')) {
-                event.stopPropagation(); // Prevent row click
-                const courseId = target.getAttribute('data-course-id');
-                
-                // Confirm before deleting
-                if (confirm('Are you sure you want to delete this course?')) {
-                    // Send delete request to server
-                    window.location.href = `/delete-course?id=${courseId}`;
-                }
-            }
-            
-            // Handle row click (for visual feedback)
-            const row = target.closest('.data-row');
-            if (row && !target.classList.contains('edit-btn') && !target.classList.contains('delete-btn')) {
-                const cells = row.querySelectorAll('td');
-                const courseData = {
-                    course_id: cells[0].textContent,
-                    course_name: cells[1].textContent,
-                    duration: cells[2].textContent,
-                    charges: cells[3].textContent,
-                    description: cells[4].textContent
-                };
-                
-                console.log('Selected Course:', courseData);
-                
-                // Visual feedback
-                document.querySelectorAll('.data-row').forEach(r => {
-                    r.style.backgroundColor = '';
+            const tableBody = document.getElementById('tableBody');
+            let selectedRow = null;
+
+            if (tableBody) { // Check if tableBody exists (it won't if no courses)
+                tableBody.addEventListener('click', function(event) {
+                    const target = event.target;
+                    const courseId = target.getAttribute('data-course-id');
+                    const row = target.closest('.data-row');
+                    
+                    // Clear previous selection
+                    if (selectedRow) {
+                        selectedRow.classList.remove('selected');
+                    }
+
+                    if (row) {
+                        // Update selection state
+                        row.classList.add('selected');
+                        selectedRow = row;
+                    }
+
+                    // --- Handle Edit button click ---
+                    if (target.classList.contains('edit-btn')) {
+                        event.stopPropagation();
+                        window.location.href = `/edit-course?id=${courseId}`;
+                    }
+                    
+                    // --- Handle Delete button click ---
+                    else if (target.classList.contains('delete-btn')) {
+                        event.stopPropagation();
+                        if (confirm(`Are you sure you want to delete course ID ${courseId} (${row.children[1].textContent})?`)) {
+                            window.location.href = `/delete-course?id=${courseId}`;
+                        }
+                    }
+                    
+                    // --- Handle general row click (for log/visual feedback) ---
+                    else if (row) {
+                        const cells = row.querySelectorAll('td');
+                        const courseData = {
+                            course_id: cells[0].textContent,
+                            course_name: cells[1].textContent,
+                            duration: cells[2].textContent,
+                            charges: cells[3].textContent,
+                            description: cells[4].textContent
+                        };
+                        
+                        console.log('Selected Course:', courseData);
+                    }
                 });
-                row.style.backgroundColor = '#e3f2fd';
             }
-            });
-            });
+        });
     </script>
 </body>
 </html>

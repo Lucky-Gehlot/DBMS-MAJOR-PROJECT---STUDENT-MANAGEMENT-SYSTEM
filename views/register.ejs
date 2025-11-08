@@ -4,51 +4,84 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Register Yourself</title>
+    <link rel="stylesheet" href="register.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
 </head>
 <body>
+    <div class="container">
+        <div class="image-section">
+            <div class="welcome-content">
+                <div class="icon-illustration">👤</div>
+                <h2>Welcome!</h2>
+                <p>Join our community today and unlock amazing features. Create your account in just a few simple steps.</p>
+            </div>
+        </div>
 
-    <!-- define the message of alert -->
-    <%let msg = ""; %>
+        <div class="form-section">
+            <!-- EJS Template Variables -->
+            <%let msg = ""; %>
 
-    <%if(err_reg_pass == 1){
-        msg = "Password and confirm password both fields are not matching";
-        err_reg_pass == 0; //reset for further registrations
-    }
-    if(err_reg_mobile_no == 1){
-        msg = "Please enter valid mobile no";
-        err_reg_mobile_no == 0; //reset for further registrations
-    }
-    if(err_reg_email == 1){
-        msg = "Already registered !, Please login";
-        err_reg_email == 0; //reset for further registrations 
-    }%>
+            <%if(err_reg_pass == 1){
+                msg = "Password and confirm password both fields are not matching";
+                err_reg_pass = 0;
+            }
+            if(err_reg_mobile_no == 1){
+                msg = "Please enter valid mobile no";
+                err_reg_mobile_no = 0;
+            }
+            if(err_reg_email == 1){
+                msg = "Already registered! Please login";
+                err_reg_email = 0;
+            }%>
 
-    <h4><%=msg%></h4>
+            <% if(msg) { %>
+                <div class="alert-message">
+                    ⚠️ <%=msg%>
+                </div>
+            <% } %>
 
-    <h1>Registration Form</h1>
-    <form action="/register" method="post">
-        <input type="text" placeholder="Enter Name" name="name">
-        <br>
-        <input type="email" placeholder="Enter Email" name="email">
-        <br>
-        <input type="number" placeholder="Enter Mobile no." name="mobile_no">
-        <br>
-        <input type="password" placeholder="Enter Password" name="password">
-        <br>
-        <input type="password" placeholder="Confirm Password" name="confirm_password">
-        <br>
-        <select name="security_que" id="">
-            <option value="" selected disabled>Select Security question</option>
-            <option value="what is your pet name">what is your pet name</option>
-            <option value="Who was your favorite teacher?">Who was your favorite teacher?</option>
-            <option value="What was your first job?">What was your first job?</option>
-            <option value="What is your favorite food?">What is your favorite food?</option>
-        </select>
-        <br>
-        <input type="text" placeholder="Answer of security question" name="ans_sec_que">
-        <br>
-        <button type="submit">Register</button>
-        
-    </form>
+            <h1>Create Account</h1>
+            <p class="subtitle">Fill in your details to get started</p>
+
+            <form action="/register" method="post">
+                <div class="input-group">
+                    <input type="text" placeholder="Full Name" name="name" required>
+                </div>
+
+                <div class="input-group">
+                    <input type="email" placeholder="Email Address" name="email" required>
+                </div>
+
+                <div class="input-group">
+                    <input type="number" placeholder="Mobile Number" name="mobile_no" required>
+                </div>
+
+                <div class="input-group">
+                    <input type="password" placeholder="Password" name="password" required>
+                </div>
+
+                <div class="input-group">
+                    <input type="password" placeholder="Confirm Password" name="confirm_password" required>
+                </div>
+
+                <div class="input-group">
+                    <select name="security_que" required>
+                        <option value="" selected disabled>Select Security Question</option>
+                        <option value="what is your pet name">What is your pet name?</option>
+                        <option value="Who was your favorite teacher?">Who was your favorite teacher?</option>
+                        <option value="What was your first job?">What was your first job?</option>
+                        <option value="What is your favorite food?">What is your favorite food?</option>
+                    </select>
+                </div>
+
+                <div class="input-group">
+                    <input type="text" placeholder="Answer to Security Question" name="ans_sec_que" required>
+                </div>
+
+                <button type="submit">Register Now</button>
+            </form>
+        </div>
+    </div>
 </body>
 </html>

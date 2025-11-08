@@ -3,43 +3,109 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Student Details</title>
+    <title>Student Management System</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="students.css">
 </head>
 <body>
-    <!-- we will show here list of all students -->
-    <a href="/add_student">Add Student</a>
-    <br><br>
-    
-    <!-- make a search button show that admin can search student just by its roll no -->
-    <%let msg = "";
-    if(err_search_stu_roll_no == 1){
-        msg = "Student data not found enter correct roll no.";
-        err_search_stu_roll_no = 0;
-    }%>
+    <div class="bg-shape shape1"></div>
+    <div class="bg-shape shape2"></div>
+    <div class="bg-shape shape3"></div>
 
-    <h4><%=msg%></h4>
+    <div class="container">
+        <div class="header">
+            <div class="header-icon">🎓</div>
+            <h1>Student Management System</h1>
+        </div>
 
-    <form action="/student" method="post">
-        <input type="number" name="roll_no" id="" placeholder="Enter roll number">
-        <button type="submit">Search student</button>
-    </form>
-    <br><br>
-    <table border="2px solid black">
-        <thead>
-            <th>Roll_No</th>
-            <th>Name</th>
-            <th>Course</th>
-        </thead>
-        <tbody>
-            <%for(let i = 0; i < students.length; i++){%>
-                <%const {roll_no,name,course} = students[i];%>
-                <tr>
-                <td><%=roll_no%></td>
-                <td><%=name%></td>
-                <td><%=course%></td>
-                </tr>
-            <%}%>
-        </tbody>
-    </table>
+        <div class="actions-bar">
+            <a href="/add_student" class="add-student-btn">➕ Add New Student</a>
+            
+            <div class="search-section">
+                <h3>🔍 Search Student</h3>
+                
+                <%let msg = "";
+                if(err_search_stu_roll_no == 1){
+                    msg = "Student data not found. Please enter correct roll number.";
+                    err_search_stu_roll_no = 0;
+                }%>
+
+                <% if(msg) { %>
+                    <div class="error-message">⚠️ <%=msg%></div>
+                <% } %>
+
+                <form action="/student" method="post" class="search-form">
+                    <input type="number" name="roll_no" placeholder="Enter student roll number" required>
+                    <button type="submit" class="search-btn">Search</button>
+                </form>
+            </div>
+        </div>
+
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>📋 Roll No</th>
+                        <th>👤 Name</th>
+                        <th>📚 Course</th>
+                        <th>✏️ Edit</th>
+                        <th>🗑️ Delete</th>
+                    </tr>
+                </thead>
+                <tbody id="tableBody">
+                    <% if(students.length === 0) { %>
+                        <tr>
+                            <td colspan="5">
+                                <div class="empty-state">
+                                    <div class="empty-state-icon">📭</div>
+                                    <h3>No students found</h3>
+                                    <p>Start by adding your first student!</p>
+                                </div>
+                            </td>
+                        </tr>
+                    <% } else { %>
+                        <%for(let i = 0; i < students.length; i++){%>
+                            <%const {roll_no,name,course} = students[i];%>
+                            <tr class="data-row">
+                                <td><strong><%=roll_no%></strong></td>
+                                <td><%=name%></td>
+                                <td><%=course%></td>
+                                <td><button class="edit-btn" student-roll-no="<%=roll_no%>">Edit</button></td>  
+                                <td><button class="delete-btn" student-roll-no="<%=roll_no%>">Delete</button></td> 
+                            </tr>
+                        <%}%>
+                    <% } %>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const tableBody = document.getElementById('tableBody');
+            
+            // Event delegation for Edit and Delete buttons
+            tableBody.addEventListener('click', function(event) {
+                const target = event.target;
+                
+                // Handle Edit button click
+                if (target.classList.contains('edit-btn')) {
+                    event.stopPropagation();
+                    const rollNo = target.getAttribute('student-roll-no');
+                    window.location.href = `/edit-student?id=${rollNo}`;
+                }
+                
+                // Handle Delete button click
+                if (target.classList.contains('delete-btn')) {
+                    event.stopPropagation();
+                    const rollNo = target.getAttribute('student-roll-no');
+                    
+                    if (confirm('⚠️ Are you sure you want to delete this student? This action cannot be undone.')) {
+                        window.location.href = `/delete-student?id=${rollNo}`;
+                    }
+                }
+            });
+        });
+    </script>
 </body>
 </html>

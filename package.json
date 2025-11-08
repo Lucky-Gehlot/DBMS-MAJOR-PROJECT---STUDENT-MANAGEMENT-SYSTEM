@@ -15,5 +15,8 @@
   "bugs": {
     "url": "https://github.com/Lucky-Gehlot/DBMS-MAJOR-PROJECT---STUDENT-MANAGEMENT-SYSTEM/issues"
   },
-  "homepage": "https://github.com/Lucky-Gehlot/DBMS-MAJOR-PROJECT---STUDENT-MANAGEMENT-SYSTEM#readme"
+  "homepage": "https://github.com/Lucky-Gehlot/DBMS-MAJOR-PROJECT---STUDENT-MANAGEMENT-SYSTEM#readme",
+  "dependencies": {
+    "pdfkit": "^0.17.2"
+  }
 }

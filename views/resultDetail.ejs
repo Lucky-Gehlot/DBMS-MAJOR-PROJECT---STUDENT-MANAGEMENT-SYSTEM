@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Result Detail</title>
+    <link rel="stylesheet" href="/resultDetail.css">
+    <!-- <link rel="stylesheet" href="resultDetail.css"> -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="content-wrapper">
+        <div class="header">
+            <h2>Student Result Detail</h2>
+            <p>Complete examination result report</p>
+        </div>
+
+        <div class="result-container">
+            <div class="student-header">
+                <div class="student-name"><%= result.name %></div>
+                <div class="student-roll">Roll No: <%= result.roll_no %></div>
+            </div>
+
+            <div class="details-grid">
+                <div class="detail-item">
+                    <div class="detail-label">Email Address</div>
+                    <div class="detail-value"><%= result.email %></div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-label">Course</div>
+                    <div class="detail-value"><%= result.course %></div>
+                </div>
+            </div>
+
+            <div class="marks-section">
+                <% 
+                    const percentage = ((result.marks_obtained / result.total_marks) * 100).toFixed(2);
+                    const status = percentage >= 40 ? 'pass' : 'fail';
+                    let grade = 'F';
+                    if (percentage >= 90) grade = 'A+';
+                    else if (percentage >= 80) grade = 'A';
+                    else if (percentage >= 70) grade = 'B';
+                    else if (percentage >= 60) grade = 'C';
+                    else if (percentage >= 50) grade = 'D';
+                    else if (percentage >= 40) grade = 'E';
+                %>
+                
+                <div class="grade-circle">
+                    <div class="grade-letter"><%= grade %></div>
+                </div>
+
+                <div class="percentage-display"><%= percentage %>%</div>
+                <span class="status-badge <%= status %>"><%= status.toUpperCase() %></span>
+
+                <div class="marks-grid">
+                    <div class="marks-item">
+                        <div class="marks-label">Marks Obtained</div>
+                        <div class="marks-value"><%= result.marks_obtained %></div>
+                    </div>
+                    <div class="marks-item">
+                        <div class="marks-label">Total Marks</div>
+                        <div class="marks-value"><%= result.total_marks %></div>
+                    </div>
+                    <div class="marks-item">
+                        <div class="marks-label">Grade</div>
+                        <div class="marks-value"><%= grade %></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="action-buttons">
+            <a href="/download/<%= result.roll_no %>" class="btn btn-primary">📄 Download as PDF</a>
+            <a href="/view-results" class="btn btn-secondary">← Back to All Results</a>
+        </div>
+    </div>
+</body>
+</html>

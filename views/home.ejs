@@ -3,14 +3,98 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Home Page</title>
+    <title>Student Result Management System - Home</title>
+    <link rel="stylesheet" href="home.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    
 </head>
 <body>
-    <h2>Student Result Management System</h2>
-    <a href="/courses">Courses</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-    <a href="/students">Students</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-    <a href="/results">Add Results</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-    <a href="/view_results">View Results</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-    <a href="/login">Log out</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    <!-- Navigation Bar -->
+    <nav>
+        <div class="nav-container">
+            <div class="logo">
+                <span class="logo-icon">🎓</span>
+                <span>SRMS</span>
+            </div>
+            <div class="menu-toggle" onclick="toggleMenu()">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+            <div class="nav-links" id="navLinks">
+                <a href="/courses">📚 Courses</a>
+                <a href="/students">👥 Students</a>
+                <a href="/results">➕ Add Results</a>
+                <a href="/view-results">📊 View Results</a>
+                <a href="/login" class="logout">🚪 Log Out</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <div class="hero">
+        <div class="hero-content">
+            <h1>Student Result Management System</h1>
+            <p>Efficiently manage student records, courses, and results with our comprehensive platform</p>
+        </div>
+
+        <!-- Stats Cards
+        <div class="stats">
+            <div class="stat-card">
+                <div class="stat-number">500+</div>
+                <div class="stat-label">Active Students</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">50+</div>
+                <div class="stat-label">Courses</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">1000+</div>
+                <div class="stat-label">Results Recorded</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">98%</div>
+                <div class="stat-label">Accuracy</div>
+            </div>
+        </div> -->
+
+        <!-- Feature Cards -->
+        <div class="features">
+            <div class="feature-card">
+                <div class="feature-icon">📚</div>
+                <h3>Manage Courses</h3>
+                <p>Add, edit, and organize all your courses in one centralized location</p>
+                <a href="/courses">Explore Courses</a>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon">👨‍🎓</div>
+                <h3>Student Records</h3>
+                <p>Maintain comprehensive student profiles with complete academic history</p>
+                <a href="/students">View Students</a>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon">➕</div>
+                <h3>Add Results</h3>
+                <p>Quickly input and update student examination results with ease</p>
+                <a href="/results">Add Results</a>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon">📊</div>
+                <h3>View Results</h3>
+                <p>Access detailed reports and analytics of student performance</p>
+                <a href="/view-results">View Results</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function toggleMenu() {
+            const navLinks = document.getElementById('navLinks');
+            navLinks.classList.toggle('active');
+        }
+    </script>
 </body>
 </html>

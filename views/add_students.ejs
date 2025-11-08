@@ -3,159 +3,251 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Student Details</title>
+    <link rel="stylesheet" href="add_students.css">
+    <title>Student Registration</title>
+
 </head>
 <body>
-    <h2>Student Details</h2>
-    <form action="/add_student" method="post">
-        <input type="number" placeholder="Enter roll no." name="roll_no"><br><br>
-        <input type="text" placeholder="Enter name" required name="name"><br><br>
-        <input type="email" placeholder="enter email" name="email"> <br><br>
-        <select name="gender" id="" required>
-            <option value="gender" selected disabled>Select gender</option>
-            <option value="male">male</option>
-            <option value="female">Female</option>
-        </select>
-        <br><br>
-        <select id="stateSelect" name="state" required>
-            <option value="" disabled selected>--- Select a State/UT ---</option>
-        </select>
-        <br><br>
-        <select id="citySelect" name="city" required disabled>
-            <option value="" disabled selected>--- Select a City ---</option>
-        </select>
-        <br><br> 
-        
-        <input type="number" placeholder="Enter pincode" required name="pincode">
-        <br><br>
-        <select name="course" id="" required>
-            <option value="" selected disabled>Select Course</option>
-            <%for(let i = 0; i < courses.length; i++){%>
-                <%const {course_name} = courses[i]; %>
-                <option value="<%=course_name%>"><%=course_name%></option>
-            <%}%>
-        </select>
-        <br><br>
-        <input type="number" placeholder="Enter contact number" name="contact_no" required>
-        <br><br>
-        <input type="date" placeholder="Admission date" name="addmission_date" required>
-        <br><br>
-        <textarea name="address" id="" placeholder="Enter complete address" required></textarea>
-        <br><br>
-        <button type="submit">Add Student</button>
-    </form>
+    <div class="container">
+        <div class="header">
+            <div class="icon-wrapper">
+                <svg viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
+                </svg>
+            </div>
+            <h2>Student Registration</h2>
+            <p class="subtitle">Complete the form below to register a new student</p>
+        </div>
+
+        <div class="progress-steps">
+            <div class="progress-fill" id="progressFill"></div>
+            <div class="step active">
+                <div class="step-circle">1</div>
+                <div class="step-label">Basic Info</div>
+            </div>
+            <div class="step">
+                <div class="step-circle">2</div>
+                <div class="step-label">Location</div>
+            </div>
+            <div class="step">
+                <div class="step-circle">3</div>
+                <div class="step-label">Course & Contact</div>
+            </div>
+        </div>
+
+        <form action="/add_student" method="post" id="studentForm">
+            <div class="form-grid">
+                <div class="form-group">
+                    <label for="roll_no">Roll Number <span class="required">*</span></label>
+                    <input type="number" id="roll_no" placeholder="Enter roll number" name="roll_no" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="name">Full Name <span class="required">*</span></label>
+                    <input type="text" id="name" placeholder="Enter full name" required name="name">
+                </div>
+
+                <div class="form-group">
+                    <label for="email">Email Address <span class="required">*</span></label>
+                    <input type="email" id="email" placeholder="student@example.com" name="email" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="gender">Gender <span class="required">*</span></label>
+                    <select name="gender" id="gender" required>
+                        <option value="" selected disabled>Select gender</option>
+                        <option value="male">Male</option>
+                        <option value="female">Female</option>
+                        <option value="other">Other</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="stateSelect">State/UT <span class="required">*</span></label>
+                    <select id="stateSelect" name="state" required>
+                        <option value="" disabled selected>--- Select a State/UT ---</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="citySelect">City <span class="required">*</span></label>
+                    <select id="citySelect" name="city" required disabled>
+                        <option value="" disabled selected>--- Select a City ---</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="pincode">Pincode <span class="required">*</span></label>
+                    <input type="number" id="pincode" placeholder="Enter pincode" required name="pincode">
+                </div>
+
+                <div class="form-group">
+                    <label for="course">Course <span class="required">*</span></label>
+                    <select name="course" id="course" required>
+                        <option value="" selected disabled>Select Course</option>
+                        <%for(let i = 0; i < courses.length; i++){%>
+                            <%const {course_name} = courses[i]; %>
+                            <option value="<%=course_name%>"><%=course_name%></option>
+                        <%}%>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="contact_no">Contact Number <span class="required">*</span></label>
+                    <input type="number" id="contact_no" placeholder="Enter 10-digit number" name="contact_no" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="admission_date">Admission Date <span class="required">*</span></label>
+                    <input type="date" id="admission_date" name="addmission_date" required>
+                </div>
+
+                <div class="form-group full-width">
+                    <label for="address">Complete Address <span class="required">*</span></label>
+                    <textarea name="address" id="address" placeholder="Enter complete address with landmarks" required></textarea>
+                </div>
+            </div>
+
+            <div class="button-group">
+                <button type="reset" class="btn-secondary">Reset Form</button>
+                <button type="submit" class="btn-primary">Register Student</button>
+            </div>
+        </form>
+    </div>
 
     <script>
-            const indiaData = {
-                "Andhra Pradesh": ["Visakhapatnam", "Vijayawada", "Guntur", "Nellore"],
-                "Arunachal Pradesh": ["Itanagar", "Naharlagun", "Tawang"],
-                "Assam": ["Guwahati", "Dibrugarh", "Silchar", "Jorhat"],
-                "Bihar": ["Patna", "Gaya", "Bhagalpur", "Muzaffarpur"],
-                "Chhattisgarh": ["Raipur", "Bhilai", "Bilaspur", "Korba"],
-                "Goa": ["Panaji", "Margao", "Vasco da Gama"],
-                "Gujarat": ["Ahmedabad", "Surat", "Vadodara", "Rajkot"],
-                "Haryana": ["Faridabad", "Gurgaon", "Panipat", "Ambala"],
-                "Himachal Pradesh": ["Shimla", "Dharamshala", "Mandi", "Solan"],
-                "Jharkhand": ["Ranchi", "Jamshedpur", "Dhanbad", "Bokaro"],
-                "Karnataka": ["Bengaluru", "Mysore", "Hubli", "Mangalore"],
-                "Kerala": ["Thiruvananthapuram", "Kochi", "Kozhikode", "Thrissur"],
-                "Madhya Pradesh": ["Indore", "Bhopal", "Jabalpur", "Gwalior"],
-                "Maharashtra": ["Mumbai", "Pune", "Nagpur", "Nashik"],
-                "Manipur": ["Imphal", "Thoubal"],
-                "Meghalaya": ["Shillong", "Tura"],
-                "Mizoram": ["Aizawl", "Lunglei"],
-                "Nagaland": ["Kohima", "Dimapur"],
-                "Odisha": ["Bhubaneswar", "Cuttack", "Rourkela"],
-                "Punjab": ["Ludhiana", "Amritsar", "Jalandhar", "Patiala"],
-                "Rajasthan": ["Jaipur", "Jodhpur", "Udaipur", "Kota"],
-                "Sikkim": ["Gangtok", "Namchi"],
-                "Tamil Nadu": ["Chennai", "Coimbatore", "Madurai", "Tiruchirappalli"],
-                "Telangana": ["Hyderabad", "Warangal", "Nizamabad"],
-                "Tripura": ["Agartala", "Udaipur"],
-                "Uttar Pradesh": ["Lucknow", "Kanpur", "Varanasi", "Agra"],
-                "Uttarakhand": ["Dehradun", "Haridwar", "Rishikesh"],
-                "West Bengal": ["Kolkata", "Howrah", "Durgapur", "Asansol"],
+        const indiaData = {
+            "Andhra Pradesh": ["Visakhapatnam", "Vijayawada", "Guntur", "Nellore"],
+            "Arunachal Pradesh": ["Itanagar", "Naharlagun", "Tawang"],
+            "Assam": ["Guwahati", "Dibrugarh", "Silchar", "Jorhat"],
+            "Bihar": ["Patna", "Gaya", "Bhagalpur", "Muzaffarpur"],
+            "Chhattisgarh": ["Raipur", "Bhilai", "Bilaspur", "Korba"],
+            "Goa": ["Panaji", "Margao", "Vasco da Gama"],
+            "Gujarat": ["Ahmedabad", "Surat", "Vadodara", "Rajkot"],
+            "Haryana": ["Faridabad", "Gurgaon", "Panipat", "Ambala"],
+            "Himachal Pradesh": ["Shimla", "Dharamshala", "Mandi", "Solan"],
+            "Jharkhand": ["Ranchi", "Jamshedpur", "Dhanbad", "Bokaro"],
+            "Karnataka": ["Bengaluru", "Mysore", "Hubli", "Mangalore"],
+            "Kerala": ["Thiruvananthapuram", "Kochi", "Kozhikode", "Thrissur"],
+            "Madhya Pradesh": ["Indore", "Bhopal", "Jabalpur", "Gwalior"],
+            "Maharashtra": ["Mumbai", "Pune", "Nagpur", "Nashik"],
+            "Manipur": ["Imphal", "Thoubal"],
+            "Meghalaya": ["Shillong", "Tura"],
+            "Mizoram": ["Aizawl", "Lunglei"],
+            "Nagaland": ["Kohima", "Dimapur"],
+            "Odisha": ["Bhubaneswar", "Cuttack", "Rourkela"],
+            "Punjab": ["Ludhiana", "Amritsar", "Jalandhar", "Patiala"],
+            "Rajasthan": ["Jaipur", "Jodhpur", "Udaipur", "Kota"],
+            "Sikkim": ["Gangtok", "Namchi"],
+            "Tamil Nadu": ["Chennai", "Coimbatore", "Madurai", "Tiruchirappalli"],
+            "Telangana": ["Hyderabad", "Warangal", "Nizamabad"],
+            "Tripura": ["Agartala", "Udaipur"],
+            "Uttar Pradesh": ["Lucknow", "Kanpur", "Varanasi", "Agra"],
+            "Uttarakhand": ["Dehradun", "Haridwar", "Rishikesh"],
+            "West Bengal": ["Kolkata", "Howrah", "Durgapur", "Asansol"],
+            "Andaman and Nicobar Islands": ["Port Blair"],
+            "Chandigarh": ["Chandigarh"],
+            "Dadra and Nagar Haveli and Daman and Diu": ["Daman", "Silvassa"],
+            "Delhi": ["New Delhi", "Old Delhi", "Noida (NCR)", "Gurgaon (NCR)"],
+            "Jammu and Kashmir": ["Srinagar", "Jammu"],
+            "Ladakh": ["Leh", "Kargil"],
+            "Lakshadweep": ["Kavaratti"],
+            "Puducherry": ["Puducherry", "Karaikal"]
+        };
 
-                // Union Territories (UTs)
-                "Andaman and Nicobar Islands": ["Port Blair"],
-                "Chandigarh": ["Chandigarh"],
-                "Dadra and Nagar Haveli and Daman and Diu": ["Daman", "Silvassa"],
-                "Delhi": ["New Delhi", "Old Delhi", "Noida (NCR)", "Gurgaon (NCR)"],
-                "Jammu and Kashmir": ["Srinagar", "Jammu"],
-                "Ladakh": ["Leh", "Kargil"],
-                "Lakshadweep": ["Kavaratti"],
-                "Puducherry": ["Puducherry", "Karaikal"]
-            };
-            const stateSelect = document.getElementById('stateSelect');
-            const citySelect = document.getElementById('citySelect');
+        const stateSelect = document.getElementById('stateSelect');
+        const citySelect = document.getElementById('citySelect');
+        const form = document.getElementById('studentForm');
+        const progressFill = document.getElementById('progressFill');
+        const steps = document.querySelectorAll('.step');
 
-            // 2. Function to populate the State dropdown on page load
-            function populateStates() {
-                // Get all state names (the keys in the indiaData object)
-                const states = Object.keys(indiaData);
+        function populateStates() {
+            const states = Object.keys(indiaData);
+            const statesGroup = document.createElement('optgroup');
+            statesGroup.label = "States";
+            const utGroup = document.createElement('optgroup');
+            utGroup.label = "Union Territories";
 
-                // Create an <optgroup> for States
-                const statesGroup = document.createElement('optgroup');
-                statesGroup.label = "States";
+            const uts = [
+                "Andaman and Nicobar Islands", "Chandigarh", "Dadra and Nagar Haveli and Daman and Diu",
+                "Delhi", "Jammu and Kashmir", "Ladakh", "Lakshadweep", "Puducherry"
+            ];
 
-                // Create an <optgroup> for UTs
-                const utGroup = document.createElement('optgroup');
-                utGroup.label = "Union Territories";
+            states.forEach(state => {
+                const option = document.createElement('option');
+                option.value = state;
+                option.textContent = state;
 
-                // List of Union Territories (to separate them from States)
-                const uts = [
-                    "Andaman and Nicobar Islands", "Chandigarh", "Dadra and Nagar Haveli and Daman and Diu",
-                    "Delhi", "Jammu and Kashmir", "Ladakh", "Lakshadweep", "Puducherry"
-                ];
-
-                states.forEach(state => {
-                    const option = document.createElement('option');
-                    option.value = state;
-                    option.textContent = state;
-
-                    if (uts.includes(state)) {
-                        utGroup.appendChild(option);
-                    } else {
-                        statesGroup.appendChild(option);
-                    }
-                });
-
-                // Append the groups to the state select dropdown
-                stateSelect.appendChild(statesGroup);
-                stateSelect.appendChild(utGroup);
-            }
-
-            // 3. Function to update the City dropdown
-            function updateCities() {
-                // Clear existing options in the city dropdown
-                citySelect.innerHTML = '<option value="" disabled selected>--- Select a City ---</option>';
-
-                // Get the selected state
-                const selectedState = stateSelect.value;
-
-                if (selectedState) {
-                    // Enable the city dropdown
-                    citySelect.disabled = false;
-                    
-                    // Get the array of cities for the selected state
-                    const cities = indiaData[selectedState] || []; 
-
-                    // Add new options for the cities
-                    cities.forEach(city => {
-                        const option = document.createElement('option');
-                        option.value = city;
-                        option.textContent = city;
-                        citySelect.appendChild(option);
-                    });
+                if (uts.includes(state)) {
+                    utGroup.appendChild(option);
                 } else {
-                    // If no state is selected, disable the city dropdown
-                    citySelect.disabled = true;
+                    statesGroup.appendChild(option);
                 }
-            }
+            });
 
-            // 4. Attach event listeners
-        window.onload = populateStates; // Run this function when the page loads
-        stateSelect.addEventListener('change', updateCities); // Run this function whenever the state changes
+            stateSelect.appendChild(statesGroup);
+            stateSelect.appendChild(utGroup);
+        }
+
+        function updateCities() {
+            citySelect.innerHTML = '<option value="" disabled selected>--- Select a City ---</option>';
+            const selectedState = stateSelect.value;
+
+            if (selectedState) {
+                citySelect.disabled = false;
+                const cities = indiaData[selectedState] || [];
+
+                cities.forEach(city => {
+                    const option = document.createElement('option');
+                    option.value = city;
+                    option.textContent = city;
+                    citySelect.appendChild(option);
+                });
+            } else {
+                citySelect.disabled = true;
+            }
+        }
+
+        function updateProgress() {
+            const inputs = form.querySelectorAll('input[required], select[required], textarea[required]');
+            let filledCount = 0;
+
+            inputs.forEach(input => {
+                if (input.value.trim() !== '') {
+                    filledCount++;
+                }
+            });
+
+            const progress = (filledCount / inputs.length) * 100;
+            progressFill.style.width = progress + '%';
+
+            // Update step indicators
+            steps.forEach((step, index) => {
+                if (progress >= (index + 1) * 33.33) {
+                    step.classList.add('active');
+                } else {
+                    step.classList.remove('active');
+                }
+            });
+        }
+
+        form.addEventListener('submit', function(e) {
+            const submitBtn = form.querySelector('.btn-primary');
+            submitBtn.textContent = 'Registering...';
+            submitBtn.style.pointerEvents = 'none';
+        });
+
+        form.querySelectorAll('input, select, textarea').forEach(element => {
+            element.addEventListener('input', updateProgress);
+            element.addEventListener('change', updateProgress);
+        });
+
+        window.onload = function() {
+            populateStates();
+            updateProgress();
+        };
+        
+        stateSelect.addEventListener('change', updateCities);
     </script>
 </body>
 </html>

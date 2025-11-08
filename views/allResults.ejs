@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>All Results</title>
+    <link rel="stylesheet" href="allResults.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+</head>
+<body>
+    <div class="content-wrapper">
+        <div class="header">
+            <h2>All Student Results</h2>
+            <p>View and manage all student examination results</p>
+        </div>
+
+        <div class="action-bar">
+            <div class="stats">
+                <div class="stat-item">
+                    <span>Total Results</span>
+                    <strong id="totalCount">0</strong>
+                </div>
+                <div class="stat-item">
+                    <span>Average Score</span>
+                    <strong id="avgScore">0%</strong>
+                </div>
+            </div>
+            <a href="/results" class="add-btn">+ Add New Result</a>
+        </div>
+
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Roll No</th>
+                        <th>Name</th>
+                        <th>Course</th>
+                        <th>Marks Obtained</th>
+                        <th>Total Marks</th>
+                        <th>Percentage</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="resultsBody">
+                    <% if (results && results.length > 0) { %>
+                        <% results.forEach(r => { 
+                            const percentage = ((r.marks_obtained / r.total_marks) * 100).toFixed(2);
+                            const percentClass = percentage >= 75 ? 'high' : percentage >= 50 ? 'medium' : 'low';
+                            const status = percentage >= 40 ? 'pass' : 'fail';
+                        %>
+                            <tr>
+                                <td class="roll-no"><%= r.roll_no %></td>
+                                <td><%= r.name %></td>
+                                <td><%= r.course %></td>
+                                <td><%= r.marks_obtained %></td>
+                                <td><%= r.total_marks %></td>
+                                <td class="percentage <%= percentClass %>"><%= percentage %>%</td>
+                                <td><span class="badge <%= status %>"><%= status.toUpperCase() %></span></td>
+                                <td>
+                                    <div class="actions">
+                                        <a href="/result/<%= r.roll_no %>" class="action-link">View</a>
+                                        <a href="/download/<%= r.roll_no %>" class="action-link download">Download</a>
+                                    </div>
+                                </td>
+                            </tr>
+                        <% }) %>
+                    <% } else { %>
+                        <tr>
+                            <td colspan="8">
+                                <div class="empty-state">
+                                    <h3>No Results Found</h3>
+                                    <p>Start by adding your first student result</p>
+                                </div>
+                            </td>
+                        </tr>
+                    <% } %>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        // Calculate statistics
+        const rows = document.querySelectorAll('#resultsBody tr');
+        let totalPercentage = 0;
+        let count = 0;
+
+        rows.forEach(row => {
+            const percentCell = row.querySelector('.percentage');
+            if (percentCell) {
+                const percent = parseFloat(percentCell.textContent);
+                if (!isNaN(percent)) {
+                    totalPercentage += percent;
+                    count++;
+                }
+            }
+        });
+
+        document.getElementById('totalCount').textContent = count;
+        if (count > 0) {
+            document.getElementById('avgScore').textContent = (totalPercentage / count).toFixed(2) + '%';
+        }
+    </script>
+</body>
+</html>

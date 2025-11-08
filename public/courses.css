@@ -1,0 +1,310 @@
+
+/* --- General Styling & Reset --- */
+body {
+font-family: 'Poppins', sans-serif;
+background: linear-gradient to bottom right, #e0eafc, #cfdef3; /* Soft gradient background */
+color: #333;
+margin: 0;
+padding: 0;
+line-height: 1.6;
+min-height: 100vh; /* Ensure full viewport height */
+}
+
+.container {
+max-width: 1300px;
+margin: 0 auto;
+padding: 30px;
+}
+
+/* --- Header Banner --- */
+.header-banner {
+background: url('https://source.unsplash.com/1600x400/?education,books') no-repeat center center/cover;
+color: white;
+padding: 80px 20px;
+text-align: center;
+position: relative;
+margin-bottom: 40px;
+border-radius: 10px; /* Rounded corners for the banner */
+overflow: hidden;
+box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+}
+.header-banner::before {
+content: '';
+position: absolute;
+top: 0;
+left: 0;
+right: 0;
+bottom: 0;
+background: rgba(0, 0, 0, 0.4); /* Dark overlay for text readability */
+z-index: 1;
+}
+.header-banner h1 {
+font-family: 'Montserrat', sans-serif;
+font-size: 3.2em;
+margin-bottom: 10px;
+position: relative;
+z-index: 2;
+text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+font-weight: 700;
+}
+.header-banner p {
+font-size: 1.2em;
+position: relative;
+z-index: 2;
+text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
+}
+
+/* --- Card Styling --- */
+.card {
+background-color: #ffffff;
+border-radius: 12px;
+box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+padding: 30px;
+margin-bottom: 35px;
+transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+}
+.card:hover {
+transform: translateY(-5px);
+box-shadow: 0 10px 25px rgba(0, 0, 0, 0.12);
+}
+
+.card h2 {
+font-family: 'Montserrat', sans-serif;
+color: #007bff;
+font-size: 1.8em;
+margin-top: 0;
+margin-bottom: 25px;
+display: flex;
+align-items: center;
+border-bottom: 2px solid #e0eafc; /* Light blue border */
+padding-bottom: 15px;
+}
+.card h2 i {
+margin-right: 15px;
+font-size: 1.1em;
+color: #007bff;
+}
+
+/* --- Message Box Styling --- */
+.message-box {
+text-align: center;
+padding: 12px;
+margin-bottom: 25px;
+border-radius: 8px;
+font-weight: 500;
+display: flex;
+align-items: center;
+justify-content: center;
+box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+.message-box i {
+margin-right: 10px;
+font-size: 1.2em;
+}
+.message-success {
+background-color: #d4edda;
+color: #155724;
+border: 1px solid #c3e6cb;
+}
+.message-error {
+background-color: #f8d7da;
+color: #721c24;
+border: 1px solid #f5c6cb;
+}
+
+/* --- Form Styling (Add Course) --- */
+form label {
+display: block;
+margin-bottom: 8px;
+font-weight: 500;
+color: #555;
+}
+form input[type="text"], 
+form input[type="number"] {
+width: calc(100% - 24px); /* Account for padding */
+padding: 12px;
+margin-bottom: 20px;
+border: 1px solid #dcdcdc;
+border-radius: 6px;
+box-sizing: border-box;
+transition: all 0.3s ease;
+font-size: 1em;
+}
+form input:focus {
+border-color: #007bff;
+box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25);
+outline: none;
+}
+
+form button[type="submit"] {
+background-color: #28a745; /* Green submit button */
+color: white;
+padding: 14px 25px;
+border: none;
+border-radius: 6px;
+cursor: pointer;
+font-weight: 600;
+font-size: 1.1em;
+transition: background-color 0.3s, transform 0.2s, box-shadow 0.3s;
+display: flex;
+align-items: center;
+justify-content: center;
+}
+form button[type="submit"]:hover {
+background-color: #218838;
+transform: translateY(-2px);
+box-shadow: 0 4px 10px rgba(40, 167, 69, 0.3);
+}
+form button[type="submit"] i {
+margin-right: 10px;
+}
+
+/* --- Table Styling (Course List) --- */
+#myTable {
+width: 100%;
+border-collapse: separate;
+border-spacing: 0;
+margin-top: 20px;
+border-radius: 10px; /* Rounded corners for the table */
+overflow: hidden; /* Ensures rounded corners are visible */
+}
+
+#myTable th, #myTable td {
+padding: 15px 18px;
+text-align: left;
+border-bottom: 1px solid #f0f4f8; /* Very light border */
+}
+
+#myTable thead th {
+background-color: #007bff; /* Primary blue header */
+color: white;
+font-weight: 600;
+text-transform: uppercase;
+letter-spacing: 0.8px;
+font-size: 0.95em;
+}
+
+#myTable tbody tr:last-child td {
+border-bottom: none;
+}
+
+/* Row Hover and Selection Effect */
+.data-row { 
+cursor: pointer; 
+transition: background-color 0.3s ease-in-out; 
+}
+.data-row:nth-child(even) { /* Zebra striping for readability */
+background-color: #f9fbfd; 
+}
+.data-row:hover { 
+background-color: #e6f7ff; /* Light blue on hover */
+}
+.data-row.selected {
+background-color: #cce5ff !important; /* Stronger blue for selection */
+box-shadow: inset 3px 0 0 #007bff; /* Left border indicator */
+}
+
+/* --- Action Button Styling --- */
+.action-btn { 
+padding: 8px 15px; 
+cursor: pointer; 
+border: none; 
+border-radius: 5px; 
+font-weight: 500;
+transition: all 0.3s ease;
+font-size: 0.9em;
+display: inline-flex;
+align-items: center;
+box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+.action-btn i {
+margin-right: 8px;
+}
+.action-btn:hover {
+transform: translateY(-1px);
+box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+.edit-btn { 
+background-color: #ffc107; /* Yellow for Edit */
+color: #333; /* Dark text for contrast */
+}
+.edit-btn:hover { background-color: #e0a800; }
+
+.delete-btn { 
+background-color: #dc3545; /* Red for Delete */
+color: white; 
+margin-left: 10px;
+}
+.delete-btn:hover { background-color: #c82333; }
+
+/* --- Empty State Styling --- */
+.empty-state {
+text-align: center;
+padding: 50px 20px;
+color: #666;
+font-size: 1.1em;
+background-color: #fcfcfc;
+border-radius: 10px;
+box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+margin-top: 30px;
+}
+.empty-state img {
+max-width: 200px;
+margin-bottom: 25px;
+opacity: 0.8;
+}
+.empty-state p {
+margin-top: 15px;
+font-weight: 500;
+}
+
+/* --- Responsive Design --- */
+@media (max-width: 768px) {
+.header-banner {
+    padding: 60px 15px;
+}
+.header-banner h1 {
+    font-size: 2.5em;
+}
+.header-banner p {
+    font-size: 1em;
+}
+.container {
+    padding: 15px;
+}
+.card {
+    padding: 20px;
+}
+.card h2 {
+    font-size: 1.5em;
+}
+#myTable th, #myTable td {
+    padding: 10px 12px;
+    font-size: 0.9em;
+}
+.action-btn {
+    padding: 6px 10px;
+    font-size: 0.85em;
+}
+.delete-btn {
+    margin-left: 5px;
+}
+}
+
+@media (max-width: 480px) {
+.header-banner h1 {
+    font-size: 2em;
+}
+.header-banner p {
+    font-size: 0.9em;
+}
+form input[type="text"], 
+form input[type="number"] {
+    width: 100%;
+    padding: 10px;
+}
+form button[type="submit"] {
+    width: 100%;
+}
+}

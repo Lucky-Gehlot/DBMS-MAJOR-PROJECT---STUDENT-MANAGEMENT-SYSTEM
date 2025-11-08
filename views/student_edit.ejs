@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Student Details</title>
+    <link rel="stylesheet" href="student_edit.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+</head>
+<body>
+    <div class="bg-shape shape1"></div>
+    <div class="bg-shape shape2"></div>
+    <div class="bg-shape shape3"></div>
+
+    <div class="container">
+        <a href="/students" class="back-btn">
+            ← Back to Students
+        </a>
+
+        <div class="form-card">
+            <%const{roll_no,name,email,gender,state,city,pincode,course,contact_no,admission_date,address} = results[0];%>
+            
+            <div class="form-header">
+                <div class="form-icon">✏️</div>
+                <h1>Edit Student Details</h1>
+                <p>Update student information - Roll No: <%=roll_no%></p>
+            </div>
+
+            <div class="form-body">
+                <form action="/edit-student?id=<%=roll_no%>" method="post">
+                    <div class="form-grid">
+                        <!-- Name -->
+                        <div class="form-group">
+                            <label class="form-label">
+                                <span class="input-icon">👤</span>
+                                Full Name<span class="required">*</span>
+                            </label>
+                            <input type="text" class="form-input" placeholder="Enter full name" required name="name" value="<%=name%>">
+                        </div>
+
+                        <!-- Email -->
+                        <div class="form-group">
+                            <label class="form-label">
+                                <span class="input-icon">📧</span>
+                                Email Address<span class="required">*</span>
+                            </label>
+                            <input type="email" class="form-input" placeholder="Enter email address" required name="email" value="<%=email%>">
+                        </div>
+
+                        <!-- Gender -->
+                        <div class="form-group">
+                            <label class="form-label">
+                                <span class="input-icon">⚧</span>
+                                Gender<span class="required">*</span>
+                            </label>
+                            <input type="text" class="form-input" placeholder="Enter gender" required name="gender" value="<%=gender%>">
+                        </div>
+
+                        <!-- Contact Number -->
+                        <div class="form-group">
+                            <label class="form-label">
+                                <span class="input-icon">📞</span>
+                                Contact Number<span class="required">*</span>
+                            </label>
+                            <input type="tel" class="form-input" placeholder="Enter contact number" name="contact_no" required value="<%=contact_no%>">
+                        </div>
+
+                        <!-- Course -->
+                        <div class="form-group">
+                            <label class="form-label">
+                                <span class="input-icon">📚</span>
+                                Course<span class="required">*</span>
+                            </label>
+                            <select name="course" class="form-select" required>
+                                <% for(let i = 0; i < crs.length; i++){ %>
+                                    <% const {course_name} = crs[i]; %>
+                                    <option value="<%= course_name %>" 
+                                            <% if(course_name === course) { %> selected <% } %>>
+                                            <%= course_name %>
+                                    </option>
+                                <% } %>
+                            </select>
+                        </div>
+
+                        <!-- Admission Date -->
+                        <div class="form-group">
+                            <label class="form-label">
+                                <span class="input-icon">📅</span>
+                                Admission Date<span class="required">*</span>
+                            </label>
+                            <input type="date" class="form-input" name="addmission_date" required value="<%=admission_date%>">
+                        </div>
+
+                        <!-- State -->
+                        <div class="form-group">
+                            <label class="form-label">
+                                <span class="input-icon">🗺️</span>
+                                State<span class="required">*</span>
+                            </label>
+                            <input id="stateSelect" class="form-input" placeholder="Enter state" name="state" value="<%=state%>" type="text" required>
+                        </div>
+
+                        <!-- City -->
+                        <div class="form-group">
+                            <label class="form-label">
+                                <span class="input-icon">🏙️</span>
+                                City<span class="required">*</span>
+                            </label>
+                            <input id="citySelect" class="form-input" placeholder="Enter city" name="city" required value="<%=city%>" type="text">
+                        </div>
+
+                        <!-- Pincode -->
+                        <div class="form-group">
+                            <label class="form-label">
+                                <span class="input-icon">📮</span>
+                                Pincode<span class="required">*</span>
+                            </label>
+                            <input type="number" class="form-input" placeholder="Enter pincode" required name="pincode" value="<%=pincode%>">
+                        </div>
+
+                        <!-- Address -->
+                        <div class="form-group full-width">
+                            <label class="form-label">
+                                <span class="input-icon">🏠</span>
+                                Full Address<span class="required">*</span>
+                            </label>
+                            <textarea name="address" class="form-textarea" placeholder="Enter complete address" required><%=address%></textarea>
+                        </div>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-submit">
+                            💾 Update Student
+                        </button>
+                        <button type="button" onclick="window.history.back()" class="btn btn-cancel">
+                            ❌ Cancel
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Add smooth focus animation
+        const inputs = document.querySelectorAll('.form-input, .form-select, .form-textarea');
+        
+        inputs.forEach(input => {
+            input.addEventListener('focus', function() {
+                this.parentElement.style.transform = 'scale(1.02)';
+            });
+            
+            input.addEventListener('blur', function() {
+                this.parentElement.style.transform = 'scale(1)';
+            });
+        });
+
+        // Form validation feedback
+        const form = document.querySelector('form');
+        form.addEventListener('submit', function(e) {
+            const submitBtn = document.querySelector('.btn-submit');
+            submitBtn.innerHTML = '⏳ Updating...';
+            submitBtn.disabled = true;
+        });
+    </script>
+</body>
+</html>
