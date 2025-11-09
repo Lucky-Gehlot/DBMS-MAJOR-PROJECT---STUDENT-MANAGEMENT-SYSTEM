@@ -1,3 +1,10 @@
+const db = mysql.createConnection({
+  host: 'localhost',
+  user: 'root',
+  password: 'Lucky@@1400', // your password
+  database: 'STUDENT_RESULT_MANAGEMENT_SYSTEM'
+});
+
 const { name } = require("ejs");
 const express = require("express")
 const mysql = require("mysql2")
@@ -11,12 +18,6 @@ const fs = require('fs');
 // app.use(methodOverride('_method'))
 const app = express();
 
-const db = mysql.createConnection({
-  host: 'localhost',
-  user: 'root',
-  password: 'Lucky@@1400', // your password
-  database: 'STUDENT_RESULT_MANAGEMENT_SYSTEM'
-});
 
 db.connect(err => {
   if (err) throw err;
@@ -32,7 +33,7 @@ db.query("SHOW TABLES",(err,res) => {
 app.use(express.urlencoded({ extended: true })); 
 app.use(express.json());
 
-let port = 8080;
+const PORT = process.env.PORT || 8080;
 
 app.set("views", path.join(__dirname,"views"));
 app.set("view engine","ejs");
