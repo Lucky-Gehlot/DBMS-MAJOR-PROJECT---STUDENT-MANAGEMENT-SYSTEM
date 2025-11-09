@@ -1,9 +1,3 @@
-const db = mysql.createConnection({
-  host: 'localhost',
-  user: 'root',
-  password: 'Lucky@@1400', // your password
-  database: 'STUDENT_RESULT_MANAGEMENT_SYSTEM'
-});
 
 const { name } = require("ejs");
 const express = require("express")
@@ -18,6 +12,12 @@ const fs = require('fs');
 // app.use(methodOverride('_method'))
 const app = express();
 
+const db = mysql.createConnection({
+  host: 'localhost',
+  user: 'root',
+  password: '', // your password
+  database: 'STUDENT_RESULT_MANAGEMENT_SYSTEM'
+});
 
 db.connect(err => {
   if (err) throw err;
@@ -40,8 +40,8 @@ app.set("view engine","ejs");
 
 app.use(express.static(path.join(__dirname,"public")))  //This folder is for styling 
 
-app.listen(port,() => {
-    console.log("app is listening on port - ",port)
+app.listen(PORT,() => {
+    console.log("app is listening on port - ",PORT)
 })
 
 let err_pass = 0; //this is the boolean field which will check that in the login page which kind of error is found , error can be of two types this is refer to if my

@@ -323,16 +323,13 @@ student-management-system/
 
 ```markdown
 ### Login Page
-![Login](screenshots/login.png)
+![Login](/screenshots/login_page.png)
 
-### Dashboard
-![Dashboard](screenshots/dashboard.png)
+### Home Page
+![home](/screenshots/home.png)
 
-### Student Management
-![Students](screenshots/students.png)
-
-### Results PDF
-![PDF](screenshots/pdf.png)
+### Register Page
+![register](/screenshots/register_page.png)
 ```
 
 ---
