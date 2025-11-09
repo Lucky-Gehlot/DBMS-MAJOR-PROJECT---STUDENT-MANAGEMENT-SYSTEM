@@ -323,13 +323,13 @@ student-management-system/
 
 ```markdown
 ### Login Page
-![Login](/screenshots/login_page.png)
+![Login](https://raw.githubusercontent.com/Lucky-Gehlot/DBMS-MAJOR-PROJECT---STUDENT-MANAGEMENT-SYSTEM/main/screenshots/login_page.png)
 
 ### Home Page
-![home](/screenshots/home.png)
+![home](https://raw.githubusercontent.com/Lucky-Gehlot/DBMS-MAJOR-PROJECT---STUDENT-MANAGEMENT-SYSTEM/main/screenshots/home.png)
 
 ### Register Page
-![register](/screenshots/register_page.png)
+![register](https://raw.githubusercontent.com/Lucky-Gehlot/DBMS-MAJOR-PROJECT---STUDENT-MANAGEMENT-SYSTEM/main/screenshots/register_page.png)
 ```
 
 ---
